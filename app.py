@@ -1,11 +1,11 @@
 # Librerias
-from pathlib import Path
+# from pathlib import Path
+import sys
 import json
 import os
 import requests # No nativo
 # pyrefly: ignore [missing-import]
 import matplotlib.pyplot as plt
-# Nota: tkinder no es nativo en linux
 
 # Definicion de constantes
 class Constantes:
@@ -14,7 +14,7 @@ class Constantes:
     """
     YEAR_MIN = 2022
     YEAR_MAX = 2026
-    RUTA_ARCHIVO = Path(__file__).parent / "datos" / "zonas_caracas.json"
+    RUTA_ARCHIVO = "data.json"
     URL_API = "https://api.open-meteo.com/v1/forecast"
     URL_API_HISTORIC = "https://historical-forecast-api.open-meteo.com/v1/forecast"
     WEATHER_CODE = {
@@ -131,7 +131,16 @@ class LeerJSON:
         :return: lista de localidades
         """
         localidades = []
-        if not self.ruta_archivo.exists():
+
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+        self.ruta_archivo = os.path.join(base_path, "data.json")
+
+        if not os.path.isfile(self.ruta_archivo):
             return localidades
 
         with open(self.ruta_archivo, "r", encoding="utf-8") as archivo:
