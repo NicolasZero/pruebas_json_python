@@ -1,5 +1,5 @@
 # Librerias
-# from pathlib import Path
+from pathlib import Path
 import sys
 import json
 import os
@@ -137,7 +137,7 @@ class LeerJSON:
             # PyInstaller creates a temp folder and stores path in _MEIPASS
             base_path = sys._MEIPASS
         except Exception:
-            base_path = os.path.abspath(".")
+            base_path = Path(__file__).parent
         self.ruta_archivo = os.path.join(base_path, "data.json")
 
         if not os.path.isfile(self.ruta_archivo):
